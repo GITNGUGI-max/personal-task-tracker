@@ -1,0 +1,104 @@
+.task-app {
+  width: calc(100% - 32px);
+  max-width: 640px;
+  margin: 40px auto;
+  padding: 24px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 6%);
+}
+
+.task-app h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.task-app p {
+  color: #64748b;
+}
+
+.task-app form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.task-app form > label {
+  grid-column: 1 / -1;
+  font-weight: 600;
+}
+
+.task-app form input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.task-app button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.task-app form button {
+  background: #9f1239;
+  color: white;
+}
+
+.task-app form button:hover {
+  background: #881337;
+}
+
+.task-app ul {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.task-app li {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.task-app li label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.task-app li span {
+  overflow-wrap: anywhere;
+}
+
+.task-app input[type="checkbox"] {
+  flex-shrink: 0;
+  margin-top: 3px;
+  accent-color: #9f1239;
+}
+
+.task-app li button {
+  flex-shrink: 0;
+  background: #fff1f2;
+  color: #9f1239;
+}
+
+@media (max-width: 480px) {
+  .task-app {
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  .task-app form {
+    grid-template-columns: 1fr;
+  }
+}

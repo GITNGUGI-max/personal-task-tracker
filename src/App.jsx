@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef} from 'react'
 import './App.css'
 
 const STORAGE_KEY = "Personal-task-tracker-tasks"
 
 function App() {
   const [taskText, setTaskText] = useState("")
+  const [editingTaskId, setEditingTaskId] = useState(null)
+  const taskInputRef = useRef(null)
+
   const [tasks, setTasks] = useState(()=>{
     try{
         const savedTasks = localStorage.getItem(STORAGE_KEY)
@@ -25,13 +28,20 @@ useEffect(()=>{
     console.error("Could not save task", error)
   }
 }, [tasks])
-  function addTask(event){
+  function handleSubmit(event){
     event.preventDefault()
 
     const text = taskText.trim()
 
     if(text === ""){
       return 
+    }
+
+    if(editingTaskId !== null){
+      setTasks((currentTasks)=>currentTasks.map((task)=>task.id === editingTaskId ? {...task, text:text} : task))
+
+      cancelEditing()
+      return
     }
 
 
@@ -54,6 +64,21 @@ useEffect(()=>{
 
   function deleteTask(taskId){
     setTasks((currentTasks)=>currentTasks.filter((task)=>task.id !== taskId))
+
+    if (editingTaskId === taskId) {
+      cancelEditing()
+    }
+  }
+  
+  function startEditing(task){
+    setEditingTaskId(task.id)
+    setTaskText(task.text)
+    taskInputRef.current?.focus()
+  }
+
+  function cancelEditing(){
+    setEditingTaskId(null)
+    setTaskText("")
   }
 
   return (
@@ -61,11 +86,16 @@ useEffect(()=>{
       <h1>Personal Task Tracker</h1>
       <p>What task would you like to do today?</p>
 
-      <form action="" onSubmit={addTask}>
-        <label htmlFor="task-input">New Task</label>
-        <input type="text" id='task-input' placeholder='eg. Practice react' value={taskText} onChange={(event)=>setTaskText(event.target.value)} required/>
-        <button type="submit">Add Task</button>
-      </form>
+      <form action="" onSubmit={handleSubmit}>
+        <label htmlFor="task-input">{editingTaskId === null ? 'New Task' : 'Edit Task'}</label>
+        <input type="text" ref={taskInputRef} id='task-input' placeholder='eg. Practice react' value={taskText} onChange={(event)=>setTaskText(event.target.value)} required/>
+        <button type="submit">{editingTaskId === null ? 'Add Task' : 'Save Changes'}</button>
+        {editingTaskId !== null && (
+        <button type="button" onClick={cancelEditing}>
+          Cancel
+        </button>
+      )}
+  </form>
     {
       tasks.length === 0 ?(
         <p>No tasks to display yet.</p>
@@ -74,7 +104,7 @@ useEffect(()=>{
         {tasks.map((task)=>(
           <li key={task.id}>
             <label >
-              <input type="checkbox" checked={task.complete} onChange={()=>toggleTask(task.id)}/>
+              <input  type="checkbox" checked={task.complete} onChange={()=>toggleTask(task.id)}/>
               <span                 style={{ 
                   textDecoration:task.complete ? "line-through" : "none"
                 }}>
@@ -82,6 +112,9 @@ useEffect(()=>{
               </span>
             
             </label>
+            <button type="button" onClick={() => startEditing(task)}>
+              Edit
+            </button>
             <button type="button" onClick={()=>deleteTask(task.id)} arial-label={`Delete task ${task.text}`}>Delete</button>
           </li>
         ))}

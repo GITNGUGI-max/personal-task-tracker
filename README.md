@@ -5,6 +5,7 @@ A React application for managing daily tasks.
 ## Features
 
 - Add tasks.
+- Edit Task
 - Mark tasks complete or active.
 - Delete tasks.
 - Save tasks in the browser using localStorage.
